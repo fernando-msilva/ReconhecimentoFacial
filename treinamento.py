@@ -1,15 +1,16 @@
 import cv2
 import os
 import numpy as np
-
+from recuperarImagens import getImages
+import sys
 
 eigenface = cv2.face.EigenFaceRecognizer_create(num_components=10)
 fisherface = cv2.face.FisherFaceRecognizer_create()
 lbph = cv2.face.LBPHFaceRecognizer_create()
 
 
-def getImageById():
-    paths = [os.path.join('fotos', f) for f in os.listdir('fotos')]
+def getImageById(id_pessoa):
+    paths = getImages(id_pessoa)
     #print(paths)
     faces = []
     ids = []
@@ -23,7 +24,7 @@ def getImageById():
         #cv2.waitKey(10)
     return np.array(ids), faces
 
-ids,faces = getImageById()
+ids,faces = getImageById(sys.argv[1])
 #print(ids)
 #print(faces)
 
@@ -32,10 +33,10 @@ print('Treinamento Iniciando')
 eigenface.train(faces, ids)
 eigenface.write('EigenClassifier.yml')
 
-fisherface.train(faces, ids)
-fisherface.write('FisherClassifier.yml')
+#fisherface.train(faces, ids)
+#fisherface.write('FisherClassifier.yml')
 
-lbph.train(faces, ids)
-lbph.write('LbphClassifier.yml')
-print('Treinamento Finalizado')
+#lbph.train(faces, ids)
+#lbph.write('LbphClassifier.yml')
+#print('Treinamento Finalizado')
 

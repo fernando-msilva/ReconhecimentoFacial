@@ -1,0 +1,5 @@
+venv/*
+.idea/*
+fotos/*
+__pycache__/*
+*.pyc
