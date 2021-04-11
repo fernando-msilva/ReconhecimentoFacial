@@ -40,8 +40,10 @@ def importar(path_teste, path_treino, id, nome, descricao):
         shutil.copy(i,f"{PATH}/imagens/{id}/treino")
 
     metadados = {
-        "imagens_teste": glob(f"{PATH}/imagens/{id}/teste/*"),
-        "imagens_treino": glob(f"{PATH}/imagens/{id}/treino/*"),
+        "imagens": {
+            "teste": glob(f"{PATH}/imagens/{id}/teste/*"),
+            "treino": glob(f"{PATH}/imagens/{id}/treino/*")
+        },
         "id": id,
         "nome": nome,
         "descricao": descricao
@@ -49,4 +51,6 @@ def importar(path_teste, path_treino, id, nome, descricao):
     
     con = conexao()
 
-    print(f"novo documento com id {con.imagens.insert_one(metadados).inserted_id}")
+    id_documento = con.imagens.insert_one(metadados).inserted_id
+    print(f"novo documento adicionado")
+    return id_documento

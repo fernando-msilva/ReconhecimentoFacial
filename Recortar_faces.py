@@ -5,20 +5,26 @@ import cv2
 import os
 import numpy as np
 
+from storage.Recuperar_imagens import recuperar
+
 #Criando o modelo que irá detectar as faces
 detector_faces_01 = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 
 
-def recortar_faces(id,largura,path,path2,nome):
+def recortar_faces(id,largura,path_destino):
     amostra = 1
     altura = largura
 
-    paths = [os.path.join(path, f) for f in os.listdir(path)]
+    #paths = [os.path.join(path, f) for f in os.listdir(path)]
 
-    for pathImage in paths:
+    nome, imagens = recuperar(id,"treino")
+
+    for imagem_nome, imagem_bytes in imagens:
         try:
-            imagem = cv2.imread(pathImage) #abre a imagem
+            #imagem = cv2.imread(pathImage) #abre a imagem
+            nparr = np.fromstring(imagem_bytes, np.uint8)
+            imagem = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR)
             cv2.imshow("Face", imagem)  # Mostra a imagem
             cv2.waitKey(10)  # Deixa ela aberta durante uma janela de tempo
             imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)  # Converte a imagem em escala de cinza
@@ -32,9 +38,9 @@ def recortar_faces(id,largura,path,path2,nome):
                     imagem_face = cv2.resize(imagem_cinza[y:y + a, x:x + l], (largura, altura))
                     #cv2.imshow("Face", imagem_face)  # Mostra a imagem
                     #cv2.waitKey(100)  # Deixa ela aberta durante uma janela de tempo
-                    cv2.imwrite(f"{path2}/{nome}" + "." + str(id) + "." + str(amostra) + ".jpg", imagem_face)
+                    cv2.imwrite(f"{path_destino}/{nome}" + "." + str(id) + "." + str(amostra) + ".jpg", imagem_face)
                     print(f"Foto {amostra} recortada com sucesso")
                     amostra += 1;
         except Exception as e:
             print(e)
-        print(f"Foram recortadas {amostra - 1} faces de {len(paths)} imagens")
+        print(f"Foram recortadas {amostra - 1} faces de {len(imagens)} imagens")
