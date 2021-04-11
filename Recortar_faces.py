@@ -21,11 +21,11 @@ def recortar_faces(id,largura):
 
     nome, imagens = recuperar(id,"original")
 
-    for imagem_nome, imagem_bytes in imagens:
+    for imagem_nome, imagem in imagens:
         try:
             #imagem = cv2.imread(pathImage) #abre a imagem
-            nparr = np.fromstring(imagem_bytes, np.uint8)
-            imagem = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR)
+            #nparr = np.fromstring(imagem_bytes, np.uint8)
+            #imagem = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR)
             cv2.imshow("Face", imagem)  # Mostra a imagem
             cv2.waitKey(10)  # Deixa ela aberta durante uma janela de tempo
             imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)  # Converte a imagem em escala de cinza

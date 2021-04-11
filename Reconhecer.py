@@ -19,10 +19,10 @@ def reconhecedor_eigen(id):
 
     nome, imagens = recuperar(id,"teste")
 
-    for imagem_nome, imagem_bytes in imagens:
+    for imagem_nome, imagem in imagens:
         #imagem = cv2.imread(pathImage)  # abre a imagem
-        nparr = np.fromstring(imagem_bytes, np.uint8)
-        imagem = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR)
+        #nparr = np.fromstring(imagem_bytes, np.uint8)
+        #imagem = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR)
         imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)  # Converte a imagem em escala de cinza
         faces_detectadas = detector_faces_01.detectMultiScale(imagem_cinza, scaleFactor=1.2, minSize=(150, 150)) #Detecta faces dentro da foto
         for (x, y, w, h) in faces_detectadas:

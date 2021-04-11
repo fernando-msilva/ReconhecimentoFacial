@@ -1,17 +1,21 @@
 import cv2
 import os
 import numpy as np
+import time
 
+from storage.Recuperar_imagens import recuperar
 
-def getImageById(path2):
+def getImageById(id):
     faces = []
     ids = []
 
-    paths = [os.path.join(path2, f) for f in os.listdir(path2)]
+    #paths = [os.path.join("./storage/imagens/1/treino", f) for f in os.listdir("./storage/imagens/1/treino")]
 
-    for pathImage in paths:
-        imagem_face = cv2.cvtColor(cv2.imread(pathImage), cv2.COLOR_BGR2GRAY)
-        id=int((pathImage.split("."))[1])
+    nome, imagens = recuperar(id,"treino")
+
+    for imagem_nome,imagem in imagens:
+        imagem_face = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+        id=int((imagem_nome.split("."))[1])
         ids.append(id)
         faces.append(imagem_face)
     print(f"Foram retornadas {len(ids)} faces do id:{ids[0]}")

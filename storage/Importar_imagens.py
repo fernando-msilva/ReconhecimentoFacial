@@ -65,7 +65,9 @@ def adicionar_imagens(id,arquivo,nome,tipo):
         imwrite(f"{PATH}/imagens/{id}/treino/{nome}",arquivo)
         con = conexao()
         fugitivo_metadados = con.imagens.find_one({"id":1})
-        fugitivo_metadados["imagens"][tipo].append(arquivo)
-        con.imagens.update(fugitivo_metadados)
+        if tipo not in fugitivo_metadados["imagens"].keys():
+            fugitivo_metadados["imagens"][tipo] = []
+        fugitivo_metadados["imagens"][tipo].append(f"{PATH}/imagens/{id}/treino/{nome}")
+        con.imagens.update({"id":1},fugitivo_metadados)
     except Exception as e:
         print(e)
