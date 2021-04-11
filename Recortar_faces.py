@@ -6,19 +6,20 @@ import os
 import numpy as np
 
 from storage.Recuperar_imagens import recuperar
+from storage.Importar_imagens import adicionar_imagens
 
 #Criando o modelo que irá detectar as faces
 detector_faces_01 = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 
 
-def recortar_faces(id,largura,path_destino):
+def recortar_faces(id,largura):
     amostra = 1
     altura = largura
 
     #paths = [os.path.join(path, f) for f in os.listdir(path)]
 
-    nome, imagens = recuperar(id,"treino")
+    nome, imagens = recuperar(id,"original")
 
     for imagem_nome, imagem_bytes in imagens:
         try:
@@ -38,9 +39,11 @@ def recortar_faces(id,largura,path_destino):
                     imagem_face = cv2.resize(imagem_cinza[y:y + a, x:x + l], (largura, altura))
                     #cv2.imshow("Face", imagem_face)  # Mostra a imagem
                     #cv2.waitKey(100)  # Deixa ela aberta durante uma janela de tempo
-                    cv2.imwrite(f"{path_destino}/{nome}" + "." + str(id) + "." + str(amostra) + ".jpg", imagem_face)
+                    #cv2.imwrite(f"{path_destino}/{nome}" + "." + str(id) + "." + str(amostra) + ".jpg", imagem_face)
+                    nome_arquivo = f"{nome}" + "." + str(id) + "." + str(amostra) + ".jpg"
+                    adicionar_imagens(id,imagem_face,nome_arquivo,"treino")
                     print(f"Foto {amostra} recortada com sucesso")
-                    amostra += 1;
+                    amostra += 1
         except Exception as e:
             print(e)
         print(f"Foram recortadas {amostra - 1} faces de {len(imagens)} imagens")
