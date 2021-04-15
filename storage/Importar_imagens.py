@@ -44,8 +44,7 @@ def importar(path_original, path_teste, id, nome, descricao):
     metadados = {
         "imagens": {
             "teste": glob(f"{PATH}/imagens/{id}/teste/*"),
-            "original": glob(f"{PATH}/imagens/{id}/original/*"),
-            "treino": []
+            "original": glob(f"{PATH}/imagens/{id}/original/*")
         },
         "id": id,
         "nome": nome,
@@ -59,20 +58,47 @@ def importar(path_original, path_teste, id, nome, descricao):
     return id_documento, id
 
 
-def adicionar_imagens(id, id_documento, arquivo,nome,tipo):
+def adicionar_imagens(id, documento_id, arquivo,nome,tipo):
     if not os.path.exists(f"{PATH}/imagens/{id}/treino"):
         os.makedirs(f"{PATH}/imagens/{id}/treino")
 
     try:
         imwrite(f"{PATH}/imagens/{id}/treino/{nome}",arquivo)
+    except Exception as e:
+        print(e)
+
+    con = conexao()
+
+    documento = con.imagens.find_one({"_id": ObjectId(documento_id)})
+
+    if "treino" not in documento["imagens"].keys():
+        documento["imagens"]["treino"] = [f"{PATH}/imagens/{id}/treino/{nome}"]
+    else:
+        documento["imagens"]["treino"].append(f"{PATH}/imagens/{id}/treino/{nome}")
+    
+    con.imagens.replace_one(
+        {"_id":ObjectId(documento_id)},
+        documento
+    )
+
+    """
+    arquivos = []
+
+    try:
+        for face in faces:
+            imwrite(f"{PATH}/imagens/{id}/treino/{face[1]}",face[0])
+            arquivos.append(f"{PATH}/imagens/{id}/treino/{face[1]}")
+
         con = conexao()
-        #fugitivo_metadados = con.imagens.find_one({"id":1})
-        #if tipo not in fugitivo_metadados["imagens"].keys():
-        #    fugitivo_metadados["imagens"][tipo] = []
-        #fugitivo_metadados["imagens"][tipo].append(f"{PATH}/imagens/{id}/treino/{nome}")
+            #fugitivo_metadados = con.imagens.find_one({"id":1})
+            #if tipo not in fugitivo_metadados["imagens"].keys():
+            #    fugitivo_metadados["imagens"][tipo] = []
+            #fugitivo_metadados["imagens"][tipo].append(f"{PATH}/imagens/{id}/treino/{nome}")
+
         con.imagens.update(
             {"_id": ObjectId(id_documento)},
-            {"$push": {"imagens.$.treino":f"{PATH}/imagens/{id}/treino/{nome}","$position:0"}}
+            {"$set": {"imagens.$.treino":arquivos}}
         )
     except Exception as e:
         print(e)
+    """

@@ -21,6 +21,8 @@ def recortar_faces(id, documento_id,largura):
 
     nome, imagens = recuperar(documento_id,"original")
 
+    faces = []
+
     for imagem_nome, imagem in imagens:
         try:
             #imagem = cv2.imread(pathImage) #abre a imagem
@@ -42,8 +44,11 @@ def recortar_faces(id, documento_id,largura):
                     #cv2.imwrite(f"{path_destino}/{nome}" + "." + str(id) + "." + str(amostra) + ".jpg", imagem_face)
                     nome_arquivo = f"{nome}" + "." + str(id) + "." + str(amostra) + ".jpg"
                     adicionar_imagens(id,documento_id,imagem_face,nome_arquivo,"treino")
+                    faces.append([imagem_face, nome_arquivo])
                     print(f"Foto {amostra} recortada com sucesso")
                     amostra += 1
         except Exception as e:
             print(e)
-        print(f"Foram recortadas {amostra - 1} faces de {len(imagens)} imagens")
+
+    #adicionar_imagens(id,documento_id,faces,"treino")
+    print(f"Foram recortadas {amostra - 1} faces de {len(imagens)} imagens")
