@@ -62,10 +62,7 @@ def adicionar_imagens(id, documento_id, arquivo,nome,tipo):
     if not os.path.exists(f"{PATH}/imagens/{id}/treino"):
         os.makedirs(f"{PATH}/imagens/{id}/treino")
 
-    try:
-        imwrite(f"{PATH}/imagens/{id}/treino/{nome}",arquivo)
-    except Exception as e:
-        print(e)
+    imwrite(f"{PATH}/imagens/{id}/treino/{nome}",arquivo)
 
     con = conexao()
 

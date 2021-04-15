@@ -1,5 +1,5 @@
 from storage.Importar_imagens import importar
-documento_id, id = importar("H_F_T","F_S_H",5,"Harry Potter","o carinha com cicatriz na testa")
+documento_id, id = importar("H_F_T","F_S_H",4,"Harry Potter","o carinha com cicatriz na testa")
 
 
 import Recortar_faces
