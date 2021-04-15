@@ -8,7 +8,7 @@ from storage.Recuperar_imagens import recuperar
 recognizer = cv2.face.EigenFaceRecognizer_create(num_components=36)
 detector_faces_01 = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")  # Treinamento da Detecção de faces
 
-def reconhecedor_eigen(id):
+def reconhecedor_eigen(id, documento_id):
     recognizer.read(f'EigenClassifier_ID{id}.yml')
     trust_list = []
     width, height = 150, 150
@@ -17,7 +17,7 @@ def reconhecedor_eigen(id):
 
     #paths = [os.path.join(path3, f) for f in os.listdir(path3)]
 
-    nome, imagens = recuperar(id,"teste")
+    nome, imagens = recuperar(documento_id,"teste")
 
     for imagem_nome, imagem in imagens:
         #imagem = cv2.imread(pathImage)  # abre a imagem
@@ -35,7 +35,7 @@ def reconhecedor_eigen(id):
                     cv2.putText(imagem_cinza, str(f"ID:{id}"), (x, y + (h + 65)), font, 3, (255, 255, 255), 2)
                     cv2.putText(imagem_cinza, str(f"trust:{trust}"), (x, y + (h - 60)), font, 2, (255, 255, 255), 2)
                     cv2.imshow("Face", imagem_cinza)
-                    cv2.waitKey(80)
+                    cv2.waitKey(10)
                     trust_list.append([imagem_nome, trust])
                 else:
                     continue

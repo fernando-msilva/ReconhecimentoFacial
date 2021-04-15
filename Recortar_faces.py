@@ -13,13 +13,13 @@ detector_faces_01 = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 
 
-def recortar_faces(id,largura):
+def recortar_faces(id, documento_id,largura):
     amostra = 1
     altura = largura
 
     #paths = [os.path.join(path, f) for f in os.listdir(path)]
 
-    nome, imagens = recuperar(id,"original")
+    nome, imagens = recuperar(documento_id,"original")
 
     for imagem_nome, imagem in imagens:
         try:
@@ -41,7 +41,7 @@ def recortar_faces(id,largura):
                     #cv2.waitKey(100)  # Deixa ela aberta durante uma janela de tempo
                     #cv2.imwrite(f"{path_destino}/{nome}" + "." + str(id) + "." + str(amostra) + ".jpg", imagem_face)
                     nome_arquivo = f"{nome}" + "." + str(id) + "." + str(amostra) + ".jpg"
-                    adicionar_imagens(id,imagem_face,nome_arquivo,"treino")
+                    adicionar_imagens(id,documento_id,imagem_face,nome_arquivo,"treino")
                     print(f"Foto {amostra} recortada com sucesso")
                     amostra += 1
         except Exception as e:

@@ -5,13 +5,13 @@ import time
 
 from storage.Recuperar_imagens import recuperar
 
-def getImageById(id):
+def getImageById(id, documento_id):
     faces = []
     ids = []
 
     #paths = [os.path.join("./storage/imagens/1/treino", f) for f in os.listdir("./storage/imagens/1/treino")]
 
-    nome, imagens = recuperar(id,"treino")
+    nome, imagens = recuperar(documento_id,"treino")
 
     for imagem_nome,imagem in imagens:
         imagem_face = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)

@@ -1,9 +1,10 @@
 from storage.Conexao import conexao
+from bson.objectid import ObjectId
 
 import os
 from cv2 import imread
 
-def recuperar(id,tipo):
+def recuperar(documento_id,tipo):
     """
         Função para retornar um set de imagens de treino ou teste.
 
@@ -14,7 +15,7 @@ def recuperar(id,tipo):
 
     con = conexao()
 
-    fugitivo_metadados = con.imagens.find_one({"id":1})
+    fugitivo_metadados = con.imagens.find_one({"_id":ObjectId(documento_id)})
 
     fugitivo_imagens = fugitivo_metadados["imagens"][tipo]
 

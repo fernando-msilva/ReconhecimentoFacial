@@ -1,4 +1,5 @@
 from storage.Conexao import conexao
+from bson.objectid import ObjectId
 
 from glob import glob
 import shutil
@@ -43,7 +44,8 @@ def importar(path_original, path_teste, id, nome, descricao):
     metadados = {
         "imagens": {
             "teste": glob(f"{PATH}/imagens/{id}/teste/*"),
-            "original": glob(f"{PATH}/imagens/{id}/original/*")
+            "original": glob(f"{PATH}/imagens/{id}/original/*"),
+            "treino": []
         },
         "id": id,
         "nome": nome,
@@ -54,20 +56,23 @@ def importar(path_original, path_teste, id, nome, descricao):
 
     id_documento = con.imagens.insert_one(metadados).inserted_id
     print(f"novo documento adicionado")
-    return id_documento
+    return id_documento, id
 
 
-def adicionar_imagens(id,arquivo,nome,tipo):
+def adicionar_imagens(id, id_documento, arquivo,nome,tipo):
     if not os.path.exists(f"{PATH}/imagens/{id}/treino"):
         os.makedirs(f"{PATH}/imagens/{id}/treino")
 
     try:
         imwrite(f"{PATH}/imagens/{id}/treino/{nome}",arquivo)
         con = conexao()
-        fugitivo_metadados = con.imagens.find_one({"id":1})
-        if tipo not in fugitivo_metadados["imagens"].keys():
-            fugitivo_metadados["imagens"][tipo] = []
-        fugitivo_metadados["imagens"][tipo].append(f"{PATH}/imagens/{id}/treino/{nome}")
-        con.imagens.update({"id":1},fugitivo_metadados)
+        #fugitivo_metadados = con.imagens.find_one({"id":1})
+        #if tipo not in fugitivo_metadados["imagens"].keys():
+        #    fugitivo_metadados["imagens"][tipo] = []
+        #fugitivo_metadados["imagens"][tipo].append(f"{PATH}/imagens/{id}/treino/{nome}")
+        con.imagens.update(
+            {"_id": ObjectId(id_documento)},
+            {"$push": {"imagens.$.treino":f"{PATH}/imagens/{id}/treino/{nome}","$position:0"}}
+        )
     except Exception as e:
         print(e)
