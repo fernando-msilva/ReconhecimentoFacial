@@ -4,6 +4,10 @@ import json
 import base64
 import joblib
 import pandas as pd
+import cv2
+import os
+import numpy as np
+from statistics import mean
 
 from pydantic import BaseModel
 from typing import Dict, List
@@ -12,12 +16,12 @@ from datetime import datetime
 
 from app.get_image import get_image
 from app.predict import predict
+from app.Reconhecer import reconhecedor_eigen
 
-core = joblib.load("/opt/ml/model.joblib")
 
 class Payload(BaseModel):
-    url : str
-    id_foragido : str
+    id : str
+    documento_id : str
 
 @app.get("/health")
 def root(req: Request):
@@ -32,7 +36,7 @@ async def predict(payload: Payload):
 
     """
     try:
-        prediction = predict(payload, core)
+        prediction = reconhecedor_eigen(payload.id, payload.documento_id)
         return prediction
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
