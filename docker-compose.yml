@@ -12,7 +12,9 @@ services:
 
     api:
         image: spyface:apiv0.1
-        build: ./api
+        build:
+            context: ./api
+            target: dev
         ports:
             - 80:8080
         command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080
@@ -22,3 +24,7 @@ services:
             timeout: 15s
             retries: 2
             start_period: 30s
+        volumes:
+            - ./api/src/spyface:/spyface/:z
+            - ./api/haarcascade_frontalface_default.xml:/opt/ml/haarcascade_frontalface_default.xml:z
+            - ./api/EigenClassifier.yml:/opt/ml/EigenClassifier.yml:z
