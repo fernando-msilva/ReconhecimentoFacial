@@ -16,7 +16,7 @@ from datetime import datetime
 
 from spyface.Reconhecer import reconhecedor_eigen
 
-from fastapi import FastAPI
+from fastapi import FastAPI, File, Form
 
 app = FastAPI()
 
@@ -32,12 +32,12 @@ def root(req: Request):
     return {"status": "ok"}
 
 @app.post("/predict")
-async def predict(payload: Payload):
+async def predict(file: bytes = File(...), id: str = Form(...)):
     """
 
     """
     try:
-        prediction = reconhecedor_eigen(payload.id, payload.documento_id)
+        prediction = reconhecedor_eigen(file)
         return prediction
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
