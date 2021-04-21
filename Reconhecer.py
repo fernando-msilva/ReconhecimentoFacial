@@ -3,7 +3,7 @@ import os
 import numpy as np
 from statistics import mean
 
-from storage.Recuperar_imagens import recuperar
+from app.Recuperar_imagens import recuperar
 
 recognizer = cv2.face.EigenFaceRecognizer_create(num_components=36)
 detector_faces_01 = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")  # Treinamento da Detecção de faces
@@ -43,5 +43,3 @@ def reconhecedor_eigen(id, documento_id):
                 print(e)
     print(f"Foram detectadas {n} faces em {len(imagens)} imagems")
     print(trust_list)
-
-

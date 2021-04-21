@@ -1,4 +1,4 @@
-version: '3'
+version: "3.4"
 
 services:
     mongodb:
@@ -9,3 +9,16 @@ services:
             - ./mongodb:/data/db:z
         environment:
             MONGO_INITDB_DATABASE: spyface
+
+    api:
+        image: spyface:apiv0.1
+        build: ./api
+        ports:
+            - 80:8080
+        command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080
+        healthcheck:
+            test: ["CMD", "curl", "http://localhost:8080/health"]
+            interval: 5s
+            timeout: 15s
+            retries: 2
+            start_period: 30s
