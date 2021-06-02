@@ -1,5 +1,10 @@
 version: "3.4"
 
+networks:
+    backend:
+        external: false
+    frontend:
+
 services:
     mongodb:
         image: mongo:4.4
@@ -9,14 +14,14 @@ services:
             - ./mongodb:/data/db:z
         environment:
             MONGO_INITDB_DATABASE: spyface
+        networks:
+            - backend
 
     api:
         image: spyface:apiv0.1
         build:
             context: ./api
             target: dev
-        ports:
-            - 80:8080
         command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080
         healthcheck:
             test: ["CMD", "curl", "http://localhost:8080/health"]
@@ -28,3 +33,18 @@ services:
             - ./api/src/spyface:/spyface/:z
             - ./api/haarcascade_frontalface_default.xml:/opt/ml/haarcascade_frontalface_default.xml:z
             - ./api/EigenClassifier.yml:/opt/ml/EigenClassifier.yml:z
+        networks:
+            - backend
+
+    api-gateway:
+        image: devopsfaith/krakend
+        ports:
+            - 8080:8080
+        volumes:
+            - ./krakend:/etc/krakend:z
+        command: run --config /etc/krakend/krakend.json
+        depends_on:
+            - api
+        networks:
+            - backend
+            - frontend
