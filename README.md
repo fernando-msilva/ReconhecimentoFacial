@@ -14,7 +14,8 @@ Para utilizar o SpyFace localmente será necessário que você tenha algumas fer
 * Virtualenv
 * Docker
 * Docker compose
-* Postman (Ou similares, como insomnia. também pode ser utilizado wger ou curl. Por questões de praticidade usaremos o postman neste exemplo)
+* Minikube
+* Postman (Ou similares, como insomnia. também pode ser utilizado wget ou curl. Por questões de praticidade usaremos o postman neste exemplo)
 
 ### Importando imagens e treinando modelos
 

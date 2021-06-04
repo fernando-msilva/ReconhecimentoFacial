@@ -34,7 +34,7 @@ def root(req: Request):
 @app.post("/predict")
 async def predict(file: bytes = File(...), id: str = Form(...)):
     """
-
+    Retorna o score relativo a detecção da face
     """
     try:
         prediction = reconhecedor_eigen(file)
