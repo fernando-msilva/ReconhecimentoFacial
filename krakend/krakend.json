@@ -1,7 +1,7 @@
 {
   "version": 2,
   "extra_config": {},
-  "timeout": "3000ms",
+  "timeout": "30000ms",
   "cache_ttl": "300s",
   "output_encoding": "json",
   "name": "teste",

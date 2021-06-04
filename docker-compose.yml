@@ -17,7 +17,7 @@ services:
         networks:
             - backend
 
-    api:
+    api-service:
         image: spyface:apiv0.1
         build:
             context: ./api
@@ -39,12 +39,12 @@ services:
     api-gateway:
         image: devopsfaith/krakend
         ports:
-            - 8080:8080
+            - 80:8080
         volumes:
             - ./krakend:/etc/krakend:z
         command: run --config /etc/krakend/krakend.json
         depends_on:
-            - api
+            - api-service
         networks:
             - backend
             - frontend
