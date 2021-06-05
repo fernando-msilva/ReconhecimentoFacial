@@ -1,50 +1,64 @@
 version: "3.4"
 
 networks:
-    backend:
-        external: false
-    frontend:
+  backend:
+    external: false
+  frontend:
 
 services:
-    mongodb:
-        image: mongo:4.4
-        ports:
-            - 27017:27017 
-        volumes:
-            - ./mongodb:/data/db:z
-        environment:
-            MONGO_INITDB_DATABASE: spyface
-        networks:
-            - backend
+  mongodb:
+    image: mongo:4.4
+    volumes:
+      - mongodb:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: spyface
+    networks:
+      - backend
 
-    api-service:
-        image: spyface:apiv0.1
-        build:
-            context: ./api
-            target: dev
-        command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080
-        healthcheck:
-            test: ["CMD", "curl", "http://localhost:8080/health"]
-            interval: 60s
-            timeout: 15s
-            retries: 2
-            start_period: 30s
-        volumes:
-            - ./api/src/spyface:/spyface/:z
-            - ./api/haarcascade_frontalface_default.xml:/opt/ml/haarcascade_frontalface_default.xml:z
-            - ./api/EigenClassifier.yml:/opt/ml/EigenClassifier.yml:z
-        networks:
-            - backend
+  api-service:
+    image: api:0.1
+    build:
+      context: ./api
+      target: dev
+    command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8080/health"]
+      interval: 60s
+      timeout: 15s
+      retries: 2
+      start_period: 30s
+    volumes:
+      - ./api/src/spyface:/spyface/:z
+      - ./modelo:/opt/ml/:z
+    networks:
+      - backend
 
-    api-gateway:
-        image: devopsfaith/krakend
-        ports:
-            - 80:8080
-        volumes:
-            - ./krakend:/etc/krakend:z
-        command: run --config /etc/krakend/krakend.json
-        depends_on:
-            - api-service
-        networks:
-            - backend
-            - frontend
+  api-gateway:
+    image: devopsfaith/krakend
+    ports:
+      - 80:8080
+    volumes:
+      - ./krakend:/etc/krakend:z
+    command: run --config /etc/krakend/krakend.json
+    depends_on:
+      - api-service
+    networks:
+      - backend
+      - frontend
+
+  treino:
+    image: treino:0.1
+    build:
+      context: ./spyface
+    networks:
+      - backend
+    depends_on:
+      - mongodb
+    volumes:
+      - storage:/spyface/storage/imagens
+      - ./modelo:/spyface/modelo:z
+      - ./imagens-treinamento:/spyface/imagens-treinamento:z
+
+volumes:
+  mongodb:
+  storage:

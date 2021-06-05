@@ -10,5 +10,3 @@ EXPOSE 8080
 
 FROM dev as prod
 COPY ./src/spyface/* /spyface/
-COPY ./haarcascade_frontalface_default.xml /opt/ml/
-COPY ./EigenClassifier.yml /opt/ml/
