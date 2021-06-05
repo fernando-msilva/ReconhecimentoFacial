@@ -6,3 +6,4 @@ __pycache__/*
 mongodb/*
 storage/imagens/*
 .vscode
+modelo/*.yml
