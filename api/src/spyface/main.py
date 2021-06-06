@@ -8,6 +8,7 @@ import cv2
 import os
 import numpy as np
 from statistics import mean
+import uvicorn
 
 from pydantic import BaseModel
 from typing import Dict, List
@@ -40,5 +41,4 @@ async def predict(file: bytes = File(...), id: str = Form(...)):
         prediction = reconhecedor_eigen(file)
         return prediction
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
+        print(e)

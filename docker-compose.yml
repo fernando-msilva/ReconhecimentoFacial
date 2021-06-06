@@ -5,8 +5,12 @@ networks:
     external: false
   frontend:
 
-services:
+volumes:
   mongodb:
+  storage:
+
+services:
+  mongodb-service:
     image: mongo:4.4
     volumes:
       - mongodb:/data/db
@@ -20,7 +24,7 @@ services:
     build:
       context: ./api
       target: dev
-    command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080
+    command: uvicorn spyface.main:app --host 0.0.0.0 --port 8080 --reload
     healthcheck:
       test: ["CMD", "curl", "http://localhost:8080/health"]
       interval: 60s
@@ -29,7 +33,7 @@ services:
       start_period: 30s
     volumes:
       - ./api/src/spyface:/spyface/:z
-      - ./modelo:/opt/ml/:z
+      - ./modelo:/opt/modelo:z
     networks:
       - backend
 
@@ -50,15 +54,12 @@ services:
     image: treino:0.1
     build:
       context: ./spyface
+      target: dev
     networks:
       - backend
     depends_on:
-      - mongodb
+      - mongodb-service
     volumes:
       - storage:/spyface/storage/imagens
-      - ./modelo:/spyface/modelo:z
-      - ./imagens-treinamento:/spyface/imagens-treinamento:z
-
-volumes:
-  mongodb:
-  storage:
+      - ./modelo:/opt/modelo:z
+      - ./spyface/src:/spyface:z

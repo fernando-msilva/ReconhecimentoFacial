@@ -6,10 +6,10 @@ from statistics import mean
 from storage.Recuperar_imagens import recuperar
 
 recognizer = cv2.face.EigenFaceRecognizer_create(num_components=36)
-detector_faces_01 = cv2.CascadeClassifier("modelo/haarcascade_frontalface_default.xml")  # Treinamento da Detecção de faces
+detector_faces_01 = cv2.CascadeClassifier("/opt/config/haarcascade_frontalface_default.xml")  # Treinamento da Detecção de faces
 
 def reconhecedor_eigen(id, documento_id):
-    recognizer.read(f'modelo/EigenClassifier.yml')
+    recognizer.read(f'/opt/modelo/EigenClassifier.yml')
     trust_list = []
     width, height = 150, 150
     font = cv2.FONT_HERSHEY_COMPLEX
