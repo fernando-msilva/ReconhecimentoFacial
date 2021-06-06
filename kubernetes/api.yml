@@ -31,3 +31,11 @@ spec:
           image: api:0.1
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - mountPath: /opt/modelo
+              name: pasta-modelo
+      volumes:
+        - name: pasta-modelo
+          hostPath:
+            path: /home/docker/modelo
+            type: DirectoryOrCreate

@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: train-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: spyface-train
+          image: spyface:0.1
+          volumeMounts:
+            - mountPath: /opt/modelo
+              name: pasta-modelo
+      restartPolicy: OnFailure
+      volumes:
+        - name: pasta-modelo
+          hostPath:
+            path: /home/docker/modelo
+            type: DirectoryOrCreate

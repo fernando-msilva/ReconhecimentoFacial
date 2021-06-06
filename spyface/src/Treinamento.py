@@ -26,5 +26,5 @@ def efmt(ids,faces):
     print("Treinamento iniciado")
     eigenface = cv2.face.EigenFaceRecognizer_create(num_components=80)
     eigenface.train(faces, np.array(ids))
-    eigenface.write(f'modelo/EigenClassifier.yml')
+    eigenface.write(f'/opt/modelo/EigenClassifier.yml')
     print("Modelo treinado com sucesso")

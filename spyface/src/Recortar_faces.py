@@ -9,7 +9,7 @@ from storage.Recuperar_imagens import recuperar
 from storage.Importar_imagens import adicionar_imagens
 
 #Criando o modelo que irá detectar as faces
-detector_faces_01 = cv2.CascadeClassifier("modelo/haarcascade_frontalface_default.xml")
+detector_faces_01 = cv2.CascadeClassifier("/opt/config/haarcascade_frontalface_default.xml")
 
 
 
