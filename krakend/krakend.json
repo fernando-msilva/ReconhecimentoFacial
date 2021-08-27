@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "extra_config": {},
+  "timeout": "30000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "name": "teste",
+  "endpoints": [
+    {
+      "endpoint": "/spyface/v1/health",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/health",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "extra_config": {},
+          "host": [
+            "http://api-service:8080"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/spyface/v1/predict",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/predict",
+          "encoding": "json",
+          "sd": "static",
+          "is_collection": true,
+          "method": "POST",
+          "extra_config": {},
+          "host": [
+            "http://api-service:8080"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ]
+}

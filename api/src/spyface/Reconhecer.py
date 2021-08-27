@@ -4,10 +4,10 @@ import numpy as np
 from statistics import mean
 
 recognizer = cv2.face.EigenFaceRecognizer_create(num_components=36)
-detector_faces_01 = cv2.CascadeClassifier("/opt/ml/haarcascade_frontalface_default.xml")  # Treinamento da Detecção de faces
+detector_faces_01 = cv2.CascadeClassifier("/opt/config/haarcascade_frontalface_default.xml")  # Treinamento da Detecção de faces
 
 def reconhecedor_eigen(imagem_bytes):
-    recognizer.read('/opt/ml/EigenClassifier.yml')
+    recognizer.read('/opt/modelo/EigenClassifier.yml')
     trust_list = []
     width, height = 150, 150
     font = cv2.FONT_HERSHEY_COMPLEX

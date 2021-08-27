@@ -14,52 +14,50 @@ Para utilizar o SpyFace localmente será necessário que você tenha algumas fer
 * Virtualenv
 * Docker
 * Docker compose
-* Postman (Ou similares, como insomnia. também pode ser utilizado wger ou curl. Por questões de praticidade usaremos o postman neste exemplo)
+* Minikube
+* Postman (Ou similares, como insomnia. também pode ser utilizado wget ou curl. Por questões de praticidade usaremos o postman neste exemplo)
 
-### Importando imagens e treinando modelos
+### Arquitetura da solução
 
-Para executar a importação de imagens é necessário que o serviço do MongoDB esteja em execução. Para levantar esse serviço execute o comando abaixo:
+Atualmente o projeto é composto basicamente pelo serviço de API Gateway utilizando o **Krakend**, o **MongoDB** como banco de dados para armazenar metadados, a **API** que recebe a imagem a ser comparada e retorna o *Score* construida em python com o **Fast API**, e o serviço de treino com o código de treinamento do **OpenCV** onde é gerado o artefato utilizado pela API. O diagrama abaixo exemplifica a interação entre os componentes.
 
-```shell
-$ docker-compose up -d mongodb
+![plot](./doc/diagram.png)
+
+### Iniciando o ambiente com o Docker Compose
+
+Primeiramente é necessário criar a imagem base utilizada pelo serviço de treino e pela api. Para isso execute o comando abaixo:
+
+```sh
+$ docker image build -t spyface:base imagem-base
 ```
 
-Assim que o serviço estiver em execução é necessário executar o arquivo Testagem.py, onde as imagens serão importadas, tratadas para o treinamento, o treinamento em si e o teste do modelo. Para executar a testagem é necessário criar o ambiente virtual e instalar as dependências. Para realizar esse procedimento execute os comando abaixo:
+Com a imagem base criada basta executar o comando abaixo:
 
-```shell
-$ virtualenv -p python3 venv
+```sh
+$ docker-compose up -d && docker-compose logs -f
 ```
 
-```shell
-$ . venv/bin/activate
-```
+O comando irá subir os serviços, o treinamento do modelo irá iniciar automaticamente. Após finalizar o treinamento um arquivo .yml será gerado na pasta modelo, que vai ser compartilhado com a API para realizar a comparação das imagens. Após o serviço de treinamento ser encerrado a API pode começar a receber imagens para a comparação.
 
-```shell
-$ pip install -r requirements.txt
-```
+### Iniciando o ambiente com o Minikube
 
-Com as dependências instaladas e o ambiente configurado execute arquivo Testagem.py com o seguinte comando:
+Para este exemplo será utilizado o minikube com o doker como driver, caso deseje utilizar outro driver o carregamento das imagens no cluster será feita de uma forma diferente. Fora isso não há difereça no deploy da suloção em relação ao tipo de driver utilizado.
 
-```shel
-$ python Testagem.py
-```
+ * Inicie o minikube com o comando `minikube start --driver docker`
 
-Ao final do processo será gerado um arquivo nomeado EigenClassifier_ID1.yml. Este arquivo é o artefato que deve ser adicionado na API para ser usado na comparação das imagens enviadas.
+ * Com o cluster já em execução digite o comando `eval $(minikube docker-env)` para configurar no terminal as variáveis necessárias para que o build das imagens seja direcionado ao cluster.
 
-Agora é necessário configurar o ambiente da API:
+ * Agora para dar o build das imagens no cluster execute os comando `docker image build -t spyface:base imagem-base` para o build da imagem base, `docker image build -t api:0.1 api` para o build da imagem da API, `docker image build -t krakend:0.1 krakend` para build da imagem do API Gateway e `docker image build -t spyface:0.1 spyface` para build da imagem de treino
 
-* Copie o arquivo EigenClassifier_ID1.yml para a pasta api
-* Renomei o arquivo para EigenClassifier.yml
+ * Com as imagens carregadas no cluster agora é necessário inicar os serviços. Primeiramente inicie o mongodb com o comando `kubectl apply -f kubernetes/mongodb.yml`. Com o mongodb em execução inicie os demais serviços com o comando `kubectl apply -f kubernetes`.
 
-Tendo adicionado o artefato na pasta da API agora é necessário criar a imagem e executar o serviço para disponibilizar a rota de envio de imagens ao preditor. Para criar e executar o serviço da API digite o comando abaixo:
-
-```shel
-$ docker-compose up -d --build api
-```
+* A API vai ser publicada com um service load balancer no minikube. Para conseguir acessar externamente será necessário que, em um novo terminal, seja executado o comando `minikube tunnel`. Enquanto este comando estiver em execução o minikube fornecerá acesso ao service load balance. Assim que o comando estiver em execução volte ao primeiro terminal e digite `kubectl get svc`, a saida vai retornar um ip externo para o service **api-gateway-service**, esse ip é o que será utilizado para acessar a API.
 
 ### Enviando imagens via API
 
-Para validar se a API está funcionando corretamente teste acessando a url http://localhost/health pelo seu navegador, ou envie uma requisição com a ferramenta que tiver acesso. O retorno deve ser similar ao json abaixo:
+Caso esteja utilizando o Docker Compose substituia o **{{host}}** na url por **localhost**, caso esteja utilizando o deploy com o minikube substitua com o endereço do ip externo do service.
+
+Para validar se a API está funcionando corretamente teste acessando a url http://{{host}}/spyface/v1/predict pelo seu navegador, ou envie uma requisição com a ferramenta que tiver acesso. O retorno deve ser similar ao json abaixo:
 
 ```json
 {

@@ -1,7 +1,6 @@
 useradd docker
 mkdir /home/docker
-mkdir /opt/logs 
-mkdir /opt/ml
+mkdir /opt/logs
 mkdir app
 mkdir app/py
 touch app/__init__.py
