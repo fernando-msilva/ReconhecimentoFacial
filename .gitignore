@@ -7,3 +7,7 @@ mongodb/*
 storage/imagens/*
 .vscode
 modelo/*.yml
+infra/.terraform*
+infra/*.tfstate
+infra/*.tfstate.backup
+infra/*.tfvars
