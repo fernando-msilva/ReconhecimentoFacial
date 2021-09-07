@@ -1,5 +1,5 @@
 variable "project_id" {
-  
+  type = string
 }
 
 variable "region" {
@@ -12,9 +12,11 @@ variable "zones" {
 }
 
 variable "network" {
-  
+  type = string
+  default = "spyface-vpc"
 }
 
 variable "subnetwork" {
-  
+  type = string
+  default = "spyface-subnet"
 }
