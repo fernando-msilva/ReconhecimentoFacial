@@ -28,7 +28,7 @@ Atualmente o projeto é composto basicamente pelo serviço de API Gateway utiliz
 Primeiramente é necessário criar a imagem base utilizada pelo serviço de treino e pela api. Para isso execute o comando abaixo:
 
 ```sh
-$ docker image build -t spyface:base imagem-base
+$ docker image build -t fernandogbi/spyface-base base-image
 ```
 
 Com a imagem base criada basta executar o comando abaixo:
@@ -47,11 +47,15 @@ Para este exemplo será utilizado o minikube com o doker como driver, caso desej
 
  * Com o cluster já em execução digite o comando `eval $(minikube docker-env)` para configurar no terminal as variáveis necessárias para que o build das imagens seja direcionado ao cluster.
 
- * Agora para dar o build das imagens no cluster execute os comando `docker image build -t spyface:base imagem-base` para o build da imagem base, `docker image build -t api:0.1 api` para o build da imagem da API, `docker image build -t krakend:0.1 krakend` para build da imagem do API Gateway e `docker image build -t spyface:0.1 spyface` para build da imagem de treino
+ * Agora para dar o build das imagens no cluster execute os comando `docker image build -t spyface:base base-image` para o build da imagem base, `docker image build -t api:0.1 api` para o build da imagem da API, `docker image build -t krakend:0.1 krakend` para build da imagem do API Gateway e `docker image build -t spyface:0.1 spyface` para build da imagem de treino
 
  * Com as imagens carregadas no cluster agora é necessário inicar os serviços. Primeiramente inicie o mongodb com o comando `kubectl apply -f kubernetes/mongodb.yml`. Com o mongodb em execução inicie os demais serviços com o comando `kubectl apply -f kubernetes`.
 
 * A API vai ser publicada com um service load balancer no minikube. Para conseguir acessar externamente será necessário que, em um novo terminal, seja executado o comando `minikube tunnel`. Enquanto este comando estiver em execução o minikube fornecerá acesso ao service load balance. Assim que o comando estiver em execução volte ao primeiro terminal e digite `kubectl get svc`, a saida vai retornar um ip externo para o service **api-gateway-service**, esse ip é o que será utilizado para acessar a API.
+
+### Iniciando o ambiente com o GKE a partir da máquina local
+
+Considerando que você já tenha um ambiente na GCP com um projeto com as APIs devidamente habilitadas e tenha o gcloud autenticado em sua máquina, para fazer o deploy com o GKE a partir de sua máquina local, e tambem que tenha iniciado uma sessão com o infracost, basta apenas editar o arquivo **infra/vars.tfvars** com o id do projeto da GCP e executar o comando **make deploy PROJECT={{id do projeto GCP}}** na raiz do projeto. A partir deste comando será apresentado o valor estimado da infraestrutura, as imagens docker serão enviadas ao container registry, o terraform será executado para a criação dos recursos necessários, o kubectl será configurado e as aplicações desão deployadas no cluster em execução. Após a execução do comando basta pegar o ip público para realizar os testes na sessão abaixo com o comando **kubectl get svc**.
 
 ### Enviando imagens via API
 
