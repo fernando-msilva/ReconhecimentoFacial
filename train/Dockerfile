@@ -1,4 +1,5 @@
-FROM spyface:base AS dev
+ARG REPOSITORY
+FROM  $REPOSITORY/spyface-base AS dev
 WORKDIR /spyface
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
