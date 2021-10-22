@@ -1,0 +1,5 @@
+environment: {{ .Values.environment }}
+train_job:
+  volumeName: {{ .Values.train_job.volumeName }}
+  mountPath: {{ .Values.train_job.mountPath }}
+  hostPath: {{ .Values.train_job.hostPath }}

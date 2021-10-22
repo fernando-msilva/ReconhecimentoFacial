@@ -2,6 +2,7 @@ environments:
   dev:
     values:
       - ../base/mongodb/values/dev.values.yaml
+      - ../base/train-job/values/dev.values.yaml
 
 releases:
   - name: {{ .Values.name }}-mongodb
@@ -9,3 +10,9 @@ releases:
     namespace: default
     values:
       - ../base/mongodb/values.mongo.gotmpl
+
+  - name: {{ .Values.name }}-train-job
+    chart: ../base/train-job/charts/trainchart
+    namespace: default
+    values:
+      - ../base/train-job/values.trainjob.gotmpl

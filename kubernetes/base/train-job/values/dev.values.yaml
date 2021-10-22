@@ -1,0 +1,5 @@
+environment: dev
+train_job:
+  volumeName: pasta-modelo
+  mountPath: /opt/modelo
+  hostPath: /modelo
