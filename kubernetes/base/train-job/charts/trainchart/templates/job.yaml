@@ -18,6 +18,9 @@ spec:
               name: {{ .Values.train_job.volumeName }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: MONGO_HOST
+              value: {{ .Values.train_job.env.MONGO_HOST }}
       restartPolicy: OnFailure
       {{ if eq .Values.environment "dev" }}
       volumes:

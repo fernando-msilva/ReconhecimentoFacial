@@ -3,3 +3,5 @@ train_job:
   volumeName: {{ .Values.train_job.volumeName }}
   mountPath: {{ .Values.train_job.mountPath }}
   hostPath: {{ .Values.train_job.hostPath }}
+  env:
+    MONGO_HOST: {{ .Values.name }}-{{ .Values.train_job.env.MONGO_HOST }}

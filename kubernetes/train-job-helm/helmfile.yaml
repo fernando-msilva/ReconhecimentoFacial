@@ -6,7 +6,7 @@ environments:
 
 releases:
   - name: {{ .Values.name }}-mongodb
-    chart: ../base/mongodb/charts/mongochart
+    chart: ../base/mongodb/charts/mongo
     namespace: default
     values:
       - ../base/mongodb/values.mongo.gotmpl
