@@ -1,0 +1,11 @@
+environments:
+  dev:
+    values:
+      - ../base/mongodb/values/dev.values.yaml
+
+releases:
+  - name: {{ .Values.name }}-mongodb
+    chart: ../base/mongodb/charts/mongochart
+    namespace: default
+    values:
+      - ../base/mongodb/values.mongo.gotmpl
