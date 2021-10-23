@@ -1,0 +1,8 @@
+environment: {{ .Values.environment }}
+
+spyface_api:
+  volumeName: {{ .Values.spyface_api.volumeName }}
+  mountPath: {{ .Values.spyface_api.mountPath }}
+  hostPath: {{ .Values.spyface_api.hostPath }}
+  service:
+    port: {{ .Values.spyface_api.service.port }}

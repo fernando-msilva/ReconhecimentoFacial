@@ -1,0 +1,8 @@
+environment: dev
+
+spyface_api:
+  volumeName: pasta-modelo
+  mountPath: /opt/modelo
+  hostPath: /modelo
+  service:
+    port: 8080

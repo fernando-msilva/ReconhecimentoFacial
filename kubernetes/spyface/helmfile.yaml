@@ -3,6 +3,7 @@ environments:
     values:
       - ../base/mongodb/values/dev.values.yaml
       - ../base/train-job/values/dev.values.yaml
+      - ./values/dev.values.yaml
 
 releases:
   - name: {{ .Values.name }}-mongodb
@@ -16,3 +17,9 @@ releases:
     namespace: default
     values:
       - ../base/train-job/values.trainjob.gotmpl
+
+  - name: {{ .Values.name }}-spyface-api
+    chart: ./charts/api
+    namespace: default
+    values:
+      - ./values.spyface.gotmpl

@@ -1,7 +1,0 @@
-environment: dev
-
-volumeName: pasta-modelo
-
-developmentVolumes:
-  path: /modelo
-  type: DirectoryOrCreate
