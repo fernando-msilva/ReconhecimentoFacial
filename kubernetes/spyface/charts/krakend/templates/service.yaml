@@ -5,11 +5,10 @@ metadata:
   labels:
     {{- include "krakend.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.krakend.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.krakend.service.port }}
+      targetPort: {{ .Values.krakend.service.targetPort }}
       protocol: TCP
-      name: http
   selector:
     {{- include "krakend.selectorLabels" . | nindent 4 }}

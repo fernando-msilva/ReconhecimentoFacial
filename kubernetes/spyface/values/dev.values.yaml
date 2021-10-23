@@ -6,3 +6,9 @@ spyface_api:
   hostPath: /modelo
   service:
     port: 8080
+
+krakend:
+  service:
+    port: 80
+    targetPort: 8080
+    type: LoadBalancer

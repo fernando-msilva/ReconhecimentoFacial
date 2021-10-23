@@ -23,3 +23,9 @@ releases:
     namespace: default
     values:
       - ./values.spyface.gotmpl
+
+  - name: {{ .Values.name }}-krakend
+    chart: ./charts/krakend
+    namespace: default
+    values:
+      - ./values.spyface.gotmpl
