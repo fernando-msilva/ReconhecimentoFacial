@@ -12,3 +12,6 @@ krakend:
     port: {{ .Values.krakend.service.port }}
     targetPort: {{ .Values.krakend.service.targetPort }}
     type: {{ .Values.krakend.service.type }}
+  env:
+    SPYFACE_API_HOST: {{ .Values.name }}-spyface-api
+    SPYFACE_API_PORT: {{ .Values.spyface_api.service.port }}

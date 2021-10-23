@@ -33,7 +33,14 @@ spec:
           image: fernandogbi/krakend:0.1
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-              - containerPort: {{ .Values.krakend.service.port }}
+            - containerPort: {{ .Values.krakend.service.port }}
+          env:
+            - name: FC_ENABLE
+              value: "1"
+            - name: SPYFACE_API_HOST
+              value: "{{ .Values.krakend.env.SPYFACE_API_HOST }}"
+            - name: SPYFACE_API_PORT
+              value: "{{ .Values.krakend.env.SPYFACE_API_PORT }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
