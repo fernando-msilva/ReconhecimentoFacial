@@ -34,8 +34,8 @@ services:
       retries: 2
       start_period: 30s
     volumes:
-      - ./api/src/spyface:/spyface/:z
-      - ./modelo:/opt/modelo:z
+      - ./api/src/spyface:/spyface/
+      - ./modelo:/opt/modelo
     networks:
       - backend
 
@@ -44,13 +44,16 @@ services:
     ports:
       - 80:8080
     volumes:
-      - ./krakend:/etc/krakend:z
-    command: run --config /etc/krakend/krakend.json
+      - ./krakend:/etc/krakend
     depends_on:
       - api-service
     networks:
       - backend
       - frontend
+    environment:
+      FC_ENABLE: 1
+      SPYFACE_API_HOST: api-service
+      SPYFACE_API_PORT: 8080
 
   treino:
     image: treino:0.1
@@ -65,5 +68,7 @@ services:
       - mongodb-service
     volumes:
       - storage:/spyface/storage/imagens
-      - ./modelo:/opt/modelo:z
-      - ./train/src:/spyface:z
+      - ./modelo:/opt/modelo
+      - ./train/src:/spyface
+    environment:
+      MONGO_HOST: mongodb-service
