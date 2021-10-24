@@ -10,11 +10,12 @@ Para utilizar o SpyFace localmente será necessário que você tenha algumas fer
 
 ### Pré requisitos
 
-* Python 3.8
-* Virtualenv
 * Docker
 * Docker compose
-* Minikube
+* k3d
+* helm
+* helmfile
+* kubectl
 * Postman (Ou similares, como insomnia. também pode ser utilizado wget ou curl. Por questões de praticidade usaremos o postman neste exemplo)
 
 ### Arquitetura da solução
@@ -39,27 +40,33 @@ $ docker-compose up -d && docker-compose logs -f
 
 O comando irá subir os serviços, o treinamento do modelo irá iniciar automaticamente. Após finalizar o treinamento um arquivo .yml será gerado na pasta modelo, que vai ser compartilhado com a API para realizar a comparação das imagens. Após o serviço de treinamento ser encerrado a API pode começar a receber imagens para a comparação.
 
-### Iniciando o ambiente com o Minikube
+### Iniciando o ambiente com o k3d
 
-Para este exemplo será utilizado o minikube com o doker como driver, caso deseje utilizar outro driver o carregamento das imagens no cluster será feita de uma forma diferente. Fora isso não há difereça no deploy da suloção em relação ao tipo de driver utilizado.
+Para iniciar o ambiente utilizando um cluster kubernetes com o k3d será necessário primeiramente criar o cluster com o comando abaixo:
 
- * Inicie o minikube com o comando `minikube start --driver docker`
+```sh
+$ k3d cluster create -p "80:80@loadbalancer"
+```
 
- * Com o cluster já em execução digite o comando `eval $(minikube docker-env)` para configurar no terminal as variáveis necessárias para que o build das imagens seja direcionado ao cluster.
+Após a criação do cluster, entre no diretório **kubernetes/spyface** e execute o seguinte comando:
 
- * Agora para dar o build das imagens no cluster execute os comando `docker image build -t spyface:base base-image` para o build da imagem base, `docker image build -t api:0.1 api` para o build da imagem da API, `docker image build -t krakend:0.1 krakend` para build da imagem do API Gateway e `docker image build -t spyface:0.1 spyface` para build da imagem de treino
+```sh
+$ helmfile --log-level debug --environment dev --state-values-set name=spyface sync
+```
 
- * Com as imagens carregadas no cluster agora é necessário inicar os serviços. Primeiramente inicie o mongodb com o comando `kubectl apply -f kubernetes/mongodb.yml`. Com o mongodb em execução inicie os demais serviços com o comando `kubectl apply -f kubernetes`.
+Ao final da execução do comando helmfile acima os recursos necessários serão baixados e o deploy será executado. Para validar os recursos criados no seu cluster local execute o seguinte comando:
 
-* A API vai ser publicada com um service load balancer no minikube. Para conseguir acessar externamente será necessário que, em um novo terminal, seja executado o comando `minikube tunnel`. Enquanto este comando estiver em execução o minikube fornecerá acesso ao service load balance. Assim que o comando estiver em execução volte ao primeiro terminal e digite `kubectl get svc`, a saida vai retornar um ip externo para o service **api-gateway-service**, esse ip é o que será utilizado para acessar a API.
+```sh
+$ kubectl get all
+```
 
-### Iniciando o ambiente com o GKE a partir da máquina local
+A saída do comando deve ser parecida com a imagem abaixo:
 
-Considerando que você já tenha um ambiente na GCP com um projeto com as APIs devidamente habilitadas e tenha o gcloud autenticado em sua máquina, para fazer o deploy com o GKE a partir de sua máquina local, e tambem que tenha iniciado uma sessão com o infracost, basta apenas editar o arquivo **infra/vars.tfvars** com o id do projeto da GCP e executar o comando **make deploy PROJECT={{id do projeto GCP}}** na raiz do projeto. A partir deste comando será apresentado o valor estimado da infraestrutura, as imagens docker serão enviadas ao container registry, o terraform será executado para a criação dos recursos necessários, o kubectl será configurado e as aplicações desão deployadas no cluster em execução. Após a execução do comando basta pegar o ip público para realizar os testes na sessão abaixo com o comando **kubectl get svc**.
+![plot](./doc/kubectl-get-all.png)
 
 ### Enviando imagens via API
 
-Caso esteja utilizando o Docker Compose substituia o **{{host}}** na url por **localhost**, caso esteja utilizando o deploy com o minikube substitua com o endereço do ip externo do service.
+Caso esteja utilizando o Docker Compose substituia o **{{host}}** na url por **localhost**, caso esteja utilizando o deploy com o k3d substitua com o endereço do ip externo do service. para visualizar o ip externo do ingress você pode executar o comando **kubectl get ingress**
 
 Para validar se a API está funcionando corretamente teste acessando a url http://{{host}}/spyface/v1/predict pelo seu navegador, ou envie uma requisição com a ferramenta que tiver acesso. O retorno deve ser similar ao json abaixo:
 

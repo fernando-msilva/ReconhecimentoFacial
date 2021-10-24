@@ -1,0 +1,6 @@
+mongodb:
+  service:
+    port: {{ .Values.mongodb.service.port }}
+    type: {{ .Values.mongodb.service.type }}
+  env:
+    MONGO_INITDB_DATABASE: {{ .Values.mongodb.env.MONGO_INITDB_DATABASE }}

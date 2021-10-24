@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "trainchart.fullname" . }}
+  labels:
+    {{- include "trainchart.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: fernandogbi/spyface-train:0.1
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: {{ .Values.train_job.mountPath }}
+              name: {{ .Values.train_job.volumeName }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: MONGO_HOST
+              value: {{ .Values.train_job.env.MONGO_HOST }}
+      restartPolicy: OnFailure
+      {{ if eq .Values.environment "dev" }}
+      volumes:
+        - name: {{ .Values.train_job.volumeName }}
+          hostPath:
+            path: {{ .Values.train_job.hostPath }}
+            type: DirectoryOrCreate
+      {{ end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

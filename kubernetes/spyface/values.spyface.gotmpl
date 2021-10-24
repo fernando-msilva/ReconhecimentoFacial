@@ -1,0 +1,17 @@
+environment: {{ .Values.environment }}
+
+spyface_api:
+  volumeName: {{ .Values.spyface_api.volumeName }}
+  mountPath: {{ .Values.spyface_api.mountPath }}
+  hostPath: {{ .Values.spyface_api.hostPath }}
+  service:
+    port: {{ .Values.spyface_api.service.port }}
+
+krakend:
+  service:
+    port: {{ .Values.krakend.service.port }}
+    targetPort: {{ .Values.krakend.service.targetPort }}
+    type: {{ .Values.krakend.service.type }}
+  env:
+    SPYFACE_API_HOST: {{ .Values.name }}-spyface-api
+    SPYFACE_API_PORT: {{ .Values.spyface_api.service.port }}

@@ -1,0 +1,6 @@
+mongodb:
+  service:
+    port: 27017
+    type: ClusterIP
+  env:
+    MONGO_INITDB_DATABASE: "spyface"

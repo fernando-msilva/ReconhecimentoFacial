@@ -1,0 +1,31 @@
+environments:
+  dev:
+    values:
+      - ../base/mongodb/values/dev.values.yaml
+      - ../base/train-job/values/dev.values.yaml
+      - ./values/dev.values.yaml
+
+releases:
+  - name: {{ .Values.name }}-mongodb
+    chart: ../base/mongodb/charts/mongo
+    namespace: default
+    values:
+      - ../base/mongodb/values.mongo.gotmpl
+
+  - name: {{ .Values.name }}-train-job
+    chart: ../base/train-job/charts/trainchart
+    namespace: default
+    values:
+      - ../base/train-job/values.trainjob.gotmpl
+
+  - name: {{ .Values.name }}-spyface-api
+    chart: ./charts/api
+    namespace: default
+    values:
+      - ./values.spyface.gotmpl
+
+  - name: {{ .Values.name }}-krakend
+    chart: ./charts/krakend
+    namespace: default
+    values:
+      - ./values.spyface.gotmpl
