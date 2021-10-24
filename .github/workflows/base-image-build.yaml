@@ -1,0 +1,12 @@
+name: Base image build
+on:
+  push:
+    paths:
+      - ./base-image/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build docker image
+        run: docker image build -t fernandogbi/spyface-base:latest ./base-image
