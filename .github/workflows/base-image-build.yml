@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - ./base-image/**
+      - ./.github/workflows/base-image-build.yml
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,3 +11,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: build docker image
         run: docker image build -t fernandogbi/spyface-base:latest ./base-image
+
+  push:
+    runs-on: ubuntu-lateste
+    needs: build
+    steps:
+      - run: docker image ls
+      
