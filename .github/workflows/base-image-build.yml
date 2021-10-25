@@ -1,9 +1,11 @@
 name: Base image build
 on:
   push:
-    #paths:
-    #  - ./base-image/**
-    #  - ./.github/workflows/base-image-build.yml
+    paths:
+      - ./base-image/**
+      - ./.github/workflows/base-image-build.yml
+    branches: main
+
 jobs:
   build:
     runs-on: ubuntu-latest
