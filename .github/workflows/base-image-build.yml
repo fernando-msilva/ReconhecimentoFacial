@@ -2,7 +2,8 @@ name: Base image build
 on:
   push:
     paths:
-      - ./base-image/**
+      - base-image/**
+      - .github/workflows/base-image-build.yml
     branches: main
 
 jobs:
