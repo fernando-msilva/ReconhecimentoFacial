@@ -1,8 +1,8 @@
 name: Base image build
 on:
   push:
-    #paths:
-    #  - ./base-image/**
+    paths:
+      - ./base-image/**
 jobs:
   build:
     runs-on: ubuntu-latest
