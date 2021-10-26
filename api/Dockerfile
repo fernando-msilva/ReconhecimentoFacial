@@ -1,5 +1,4 @@
-ARG REPOSITORY
-FROM  $REPOSITORY/spyface-base AS dev
+FROM  fernandogbi/spyface-base AS dev
 COPY ./src/config /
 RUN chmod +x ./system_config.sh  \
   && /system_config.sh 
