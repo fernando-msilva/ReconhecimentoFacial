@@ -22,6 +22,6 @@ steps:
         title: 'building base image'
         working_directory: ./base-image
         image_name: fernandogbi/spyface-base
-        registry_context: fernandogbi
+        registry_contexts: fernandogbi
         tag: latest
         disable_push: true
