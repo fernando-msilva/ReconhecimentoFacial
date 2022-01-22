@@ -30,7 +30,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: fernandogbi/spyface-api:0.1
+          image: fernandogbi/spyface-api
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
               - containerPort: {{ .Values.spyface_api.service.port }}
