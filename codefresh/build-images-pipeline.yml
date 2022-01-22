@@ -1,0 +1,25 @@
+version: '1.0'
+stages:
+  - clone
+  - build
+  - push
+steps:
+  clone_repository:
+    stage: clone
+    type: git-clone
+    title: 'Cloning repository'
+    description: 'Step to clone repository'
+    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+    revision: ${{CF_REVISION}}
+
+  build_images:
+    stage: build
+    type: parallel
+    steps:
+      build_base_image:
+        stage: build
+        type: build
+        title: 'building base image'
+        working_directory: ./base-image
+        tag: latest
+        disable_push: true
