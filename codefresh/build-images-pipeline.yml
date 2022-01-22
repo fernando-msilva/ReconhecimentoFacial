@@ -20,7 +20,7 @@ steps:
         stage: build
         type: build
         title: 'building base image'
-        working_directory: ./base-image
+        working_directory: ${{CF_REPO_NAME}}/base-image
         image_name: fernandogbi/spyface-base
         registry_contexts:
           - fernandogbi
