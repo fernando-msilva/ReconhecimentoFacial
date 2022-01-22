@@ -24,5 +24,4 @@ steps:
         image_name: fernandogbi/spyface-base
         registry_contexts:
           - fernandogbi
-        tag: latest
         disable_push: true
