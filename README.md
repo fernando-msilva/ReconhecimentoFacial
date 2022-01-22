@@ -11,7 +11,6 @@ Para utilizar o SpyFace localmente será necessário que você tenha algumas fer
 ### Pré requisitos
 
 * Docker
-* Docker compose
 * k3d
 * helm
 * helmfile
@@ -24,23 +23,7 @@ Atualmente o projeto é composto basicamente pelo serviço de API Gateway utiliz
 
 ![plot](./doc/diagram.png)
 
-### Iniciando o ambiente com o Docker Compose
-
-Primeiramente é necessário criar a imagem base utilizada pelo serviço de treino e pela api. Para isso execute o comando abaixo:
-
-```sh
-$ docker image build -t fernandogbi/spyface-base base-image
-```
-
-Com a imagem base criada basta executar o comando abaixo:
-
-```sh
-$ docker-compose up -d && docker-compose logs -f
-```
-
-O comando irá subir os serviços, o treinamento do modelo irá iniciar automaticamente. Após finalizar o treinamento um arquivo .yml será gerado na pasta modelo, que vai ser compartilhado com a API para realizar a comparação das imagens. Após o serviço de treinamento ser encerrado a API pode começar a receber imagens para a comparação.
-
-### Iniciando o ambiente com o k3d
+### Iniciando o ambiente
 
 Para iniciar o ambiente utilizando um cluster kubernetes com o k3d será necessário primeiramente criar o cluster com o comando abaixo:
 
@@ -66,7 +49,7 @@ A saída do comando deve ser parecida com a imagem abaixo:
 
 ### Enviando imagens via API
 
-Caso esteja utilizando o Docker Compose substituia o **{{host}}** na url por **localhost**, caso esteja utilizando o deploy com o k3d substitua com o endereço do ip externo do service. para visualizar o ip externo do ingress você pode executar o comando **kubectl get ingress**
+Substituia o **{{host}}** na url pelo ip externo do ingress, que você pode visualizar com o comando **kubectl get ingress**.
 
 Para validar se a API está funcionando corretamente teste acessando a url http://{{host}}/spyface/v1/predict pelo seu navegador, ou envie uma requisição com a ferramenta que tiver acesso. O retorno deve ser similar ao json abaixo:
 
