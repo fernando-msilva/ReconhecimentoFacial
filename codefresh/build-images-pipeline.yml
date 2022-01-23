@@ -28,4 +28,4 @@ steps:
         when:
           condition:
             all:
-              check_trigger_name: '"${{CF_BUILD_TRIGGER}}" == "build-base-image"'
+              check_trigger_name: '"${{BUILD_NAME}}" == "build-base-image"'
