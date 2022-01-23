@@ -25,3 +25,7 @@ steps:
         registry_contexts:
           - fernandogbi
         disable_push: true
+        when:
+          conditional:
+            all:
+              check_trigger_name: '"${{CF_BUILD_TRIGGER}}" == "build-base-image"'
