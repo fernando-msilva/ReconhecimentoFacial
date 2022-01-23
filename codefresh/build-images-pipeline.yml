@@ -26,6 +26,6 @@ steps:
           - fernandogbi
         disable_push: true
         when:
-          conditional:
+          condition:
             all:
               check_trigger_name: '"${{CF_BUILD_TRIGGER}}" == "build-base-image"'
