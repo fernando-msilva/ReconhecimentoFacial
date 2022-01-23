@@ -4,6 +4,12 @@ stages:
   - build
   - push
 steps:
+  debug_environments:
+    stage: clone
+    type: freestyle
+    commands:
+      - printenv
+      - cat /codefresh/volume/cf_export
   clone_repository:
     stage: clone
     type: git-clone
@@ -59,4 +65,4 @@ steps:
         when:
           condition:
             all:
-              check_trigger_name: '"${{BUILD_NAME}}" == "build-base-image"'
+              check_trigger_name: '"${{BUILD_NAME}}" == "build-krakend-image"'
