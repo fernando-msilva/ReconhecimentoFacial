@@ -22,8 +22,39 @@ steps:
         title: 'building base image'
         working_directory: ${{CF_REPO_NAME}}/base-image
         image_name: fernandogbi/spyface-base
-        registry_contexts:
-          - fernandogbi
+        disable_push: true
+        when:
+          condition:
+            all:
+              check_trigger_name: '"${{BUILD_NAME}}" == "build-base-image"'
+      build_api_image:
+        stage: build
+        type: build
+        title: 'building api image'
+        working_directory: ${{CF_REPO_NAME}}/api
+        image_name: fernandogbi/spyface-api
+        disable_push: true
+        when:
+          condition:
+            all:
+              check_trigger_name: '"${{BUILD_NAME}}" == "build-api-image"'
+      build_train_image:
+        stage: build
+        type: build
+        title: 'building train image'
+        working_directory: ${{CF_REPO_NAME}}/train
+        image_name: fernandogbi/spyface-train
+        disable_push: true
+        when:
+          condition:
+            all:
+              check_trigger_name: '"${{BUILD_NAME}}" == "build-train-image"'
+      build_krakend_image:
+        stage: build
+        type: build
+        title: 'building krakend image'
+        working_directory: ${{CF_REPO_NAME}}/krakend
+        image_name: fernandogbi/krakend
         disable_push: true
         when:
           condition:
