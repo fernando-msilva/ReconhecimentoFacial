@@ -1,16 +1,11 @@
 version: '1.0'
 stages:
   - clone
+  - check
   - build
   - push
+
 steps:
-  debug_environments:
-    stage: clone
-    type: freestyle
-    image: alpine
-    commands:
-      - printenv
-      - cat /codefresh/volume/cf_export
   clone_repository:
     stage: clone
     type: git-clone
@@ -18,6 +13,11 @@ steps:
     description: 'Step to clone repository'
     repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: ${{CF_REVISION}}
+
+  verify_builds:
+    stage: check
+    type: justforpersonalstudies/changes-verifier
+    title: 'Getting changed files list'
 
   build_images:
     stage: build
@@ -33,7 +33,8 @@ steps:
         when:
           condition:
             all:
-              check_trigger_name: '"${{BUILD_NAME}}" == "build-base-image"'
+              check_changes: 'includes("base-image/", "${{HAS_CHANGES}}") == true'
+
       build_api_image:
         stage: build
         type: build
@@ -44,7 +45,8 @@ steps:
         when:
           condition:
             all:
-              check_trigger_name: '"${{BUILD_NAME}}" == "build-api-image"'
+              check_changes: 'includes("api/", "${{HAS_CHANGES}}") == true'
+
       build_train_image:
         stage: build
         type: build
@@ -55,7 +57,8 @@ steps:
         when:
           condition:
             all:
-              check_trigger_name: '"${{BUILD_NAME}}" == "build-train-image"'
+              check_changes: 'includes("spyface-train/", "${{HAS_CHANGES}}") == true'
+
       build_krakend_image:
         stage: build
         type: build
@@ -66,4 +69,4 @@ steps:
         when:
           condition:
             all:
-              check_trigger_name: '"${{BUILD_NAME}}" == "build-krakend-image"'
+              check_changes: 'includes("krakend/", "${{HAS_CHANGES}}") == true'
