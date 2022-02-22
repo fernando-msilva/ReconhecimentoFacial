@@ -4,6 +4,7 @@ stages:
   - check
   - build
   - push
+
 steps:
   clone_repository:
     stage: clone
