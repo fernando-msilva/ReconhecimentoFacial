@@ -44,7 +44,7 @@ steps:
         when:
           condition:
             all:
-              check_changes: 'includes("spyface-api/", "${{HAS_CHANGES}}") == true'
+              check_changes: 'includes("api/", "${{HAS_CHANGES}}") == true'
 
       build_train_image:
         stage: build
